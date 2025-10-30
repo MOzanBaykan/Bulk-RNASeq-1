@@ -18,6 +18,7 @@ suppressPackageStartupMessages({
   library(shinyvalidate)
   library(ggplot2)
   library(tibble)
+  library(bslib)
 })
 library(conflicted)
 conflict_prefer("select", "dplyr")
@@ -75,7 +76,7 @@ ui <- dashboardPage(
               numericInput("n_min",
                            label = "Enter the minimum number of raw counts for filtering out uninformative genes",
                            value = 10, min = 1, max = 10000, step = 1),
-              actionButton("update_n_min", "Update n_min!"),
+              input_task_button("update_n_min", "Update n_min!"),
               width = 4),
           infoBox(textOutput("n_min"),
                   textOutput("filtered_info"),
@@ -159,7 +160,7 @@ server <- function(input, output) {
     # Mean-SD Plot
     output$filt_ms_plot <- renderPlot({
       req(v$counts_filt)
-      meanSdPlot(as.matrix(counts_filt), ranks = FALSE)
+      meanSdPlot(as.matrix(v$counts_filt), ranks = FALSE)
     })
     
     # Helper for MA Plot, prepares the data.
